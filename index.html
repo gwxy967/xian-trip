@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>长安行 · 西安旅行足迹地图</title>
+<!-- 把下面两个占位符替换成你的高德 Key 和安全密钥 -->
+<script>
+  window._AMAP_SECURITY_CODE_ = "514b49274d928c0c5e538157880f6083";
+  window._AMAP_KEY_ = "fb9cfd3f83398105527351168325746b";
+</script>
+<script>
+  window._AMAP_SECURITY_CODE_ && (window._AMAP_SECURITY_CODE_ !== "__AMAP_SECURITY_CODE__") && (window._securityJsCode = window._AMAP_SECURITY_CODE_);
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="map"></div>
+
+<!-- 顶部标题 -->
+<header id="topbar">
+  <h1>长安行 <span>西安旅行足迹 · 2026.10.1 – 10.5</span></h1>
+  <button id="toggle-route" class="on" title="显示/隐藏行程路线">路线</button>
+  <button id="toggle-panel" title="行程列表">☰</button>
+</header>
+
+<!-- 左侧行程时间线 -->
+<aside id="timeline">
+  <div class="tl-head">行程 · <span id="spot-count"></span> 站</div>
+  <div id="tl-list"></div>
+  <div class="legend">
+    <span><i style="background:#c0392b"></i>景点</span>
+    <span><i style="background:#e67e22"></i>美食</span>
+    <span><i style="background:#2980b9"></i>住宿</span>
+    <span><i style="background:#8e44ad"></i>商场</span>
+    <span><i style="background:#7f8c8d"></i>交通</span>
+  </div>
+</aside>
+
+<!-- 右侧景点详情抽屉 -->
+<aside id="drawer">
+  <button id="drawer-close">×</button>
+  <div id="drawer-body"></div>
+</aside>
+
+<!-- 照片查看器 -->
+<div id="lightbox">
+  <button class="lb-btn" id="lb-close">×</button>
+  <button class="lb-btn lb-nav" id="lb-prev">‹</button>
+  <img id="lb-img" alt="">
+  <button class="lb-btn lb-nav" id="lb-next">›</button>
+  <div id="lb-counter"></div>
+</div>
+
+<div id="no-key-tip">
+  <div>
+    <h2>还差一步：填入高德 Key</h2>
+    <p>打开 <code>web/index.html</code>，把开头的 <code>__AMAP_KEY__</code> 和 <code>__AMAP_SECURITY_CODE__</code> 替换为你在高德开放平台申请的 Web端(JS API) Key 和安全密钥，然后刷新本页。</p>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+  // 有 Key 才加载高德 JS API，否则显示提示
+  (function () {
+    if (window._AMAP_KEY_ && window._AMAP_KEY_ !== "__AMAP_KEY__") {
+      var s = document.createElement("script");
+      s.src = "https://webapi.amap.com/maps?v=2.0&key=" + window._AMAP_KEY_;
+      s.onload = function () { boot(); };
+      s.onerror = function () { document.getElementById("no-key-tip").style.display = "flex"; };
+      document.head.appendChild(s);
+    } else {
+      document.getElementById("no-key-tip").style.display = "flex";
+    }
+  })();
+</script>
+<script src="app.js"></script>
+</body>
+</html>

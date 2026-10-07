@@ -1,0 +1,155 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  overflow: hidden;
+}
+#map { position: absolute; inset: 0; }
+
+/* ===== 顶栏 ===== */
+#topbar {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 20; display: flex; align-items: center; gap: 10px;
+  background: rgba(253, 250, 244, .94);
+  border: 1px solid #e5dccb; border-radius: 12px;
+  padding: 8px 16px; box-shadow: 0 4px 18px rgba(90, 60, 20, .15);
+}
+#topbar h1 { font-size: 20px; color: #8c2f1b; letter-spacing: 2px; }
+#topbar h1 span { font-size: 12px; color: #9a8f7a; font-weight: normal; margin-left: 8px; letter-spacing: 0; }
+#topbar button {
+  border: 1px solid #d8cdb6; background: #fff; color: #7a6a50;
+  border-radius: 8px; padding: 5px 12px; font-size: 13px; cursor: pointer;
+}
+#topbar button.on { background: #c0392b; border-color: #c0392b; color: #fff; }
+#toggle-panel { display: none; }
+
+/* ===== 左侧时间线 ===== */
+#timeline {
+  position: absolute; top: 70px; left: 14px; bottom: 14px; width: 248px;
+  z-index: 15; display: flex; flex-direction: column;
+  background: rgba(253, 250, 244, .95);
+  border: 1px solid #e5dccb; border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(90, 60, 20, .15);
+  overflow: hidden;
+}
+.tl-head {
+  padding: 12px 14px; font-weight: 600; color: #8c2f1b;
+  border-bottom: 1px solid #efe8d8; flex-shrink: 0;
+}
+#tl-list { overflow-y: auto; flex: 1; padding: 6px 0; }
+.tl-day {
+  padding: 8px 14px 4px; font-size: 12px; color: #b09a72; font-weight: 600;
+}
+.tl-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px; cursor: pointer; border-left: 3px solid transparent;
+}
+.tl-item:hover, .tl-item.active { background: #f7efdd; border-left-color: #c0392b; }
+.tl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.tl-name { font-size: 14px; color: #3a3226; flex: 1; }
+.tl-time { font-size: 11px; color: #b0a68e; }
+.legend {
+  display: flex; flex-wrap: wrap; gap: 8px 12px;
+  padding: 10px 14px; border-top: 1px solid #efe8d8;
+  font-size: 12px; color: #8a7c62; flex-shrink: 0;
+}
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; }
+
+/* ===== 地图标注 ===== */
+.spot-marker {
+  display: flex; flex-direction: column; align-items: center;
+  cursor: pointer; transform: translateY(-50%);
+}
+.spot-pin {
+  min-width: 30px; height: 30px; padding: 0 6px;
+  border-radius: 15px; color: #fff; font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.35);
+}
+.spot-label {
+  margin-top: 3px; padding: 2px 8px; font-size: 12px; white-space: nowrap;
+  background: rgba(255,255,255,.92); border-radius: 6px; color: #333;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+/* ===== 右侧详情抽屉 ===== */
+#drawer {
+  position: absolute; top: 70px; right: 14px; bottom: 14px; width: 380px;
+  z-index: 18; background: rgba(253, 250, 244, .97);
+  border: 1px solid #e5dccb; border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(90, 60, 20, .2);
+  transform: translateX(120%); transition: transform .3s ease;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+#drawer.open { transform: translateX(0); }
+#drawer-close {
+  position: absolute; top: 8px; right: 10px; z-index: 2;
+  width: 32px; height: 32px; border: 0; border-radius: 50%;
+  background: rgba(0,0,0,.45); color: #fff; font-size: 20px; cursor: pointer;
+}
+#drawer-body { overflow-y: auto; flex: 1; }
+.d-cover { width: 100%; height: 220px; object-fit: cover; display: block; }
+.d-main { padding: 14px 16px 20px; }
+.d-name { font-size: 20px; color: #8c2f1b; }
+.d-meta { font-size: 12px; color: #a3937a; margin: 6px 0 10px; }
+.d-desc { font-size: 14px; line-height: 1.8; color: #4a4033; margin-bottom: 14px; }
+.d-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.d-grid img {
+  width: 100%; height: 100px; object-fit: cover; border-radius: 6px;
+  cursor: pointer; transition: opacity .15s; display: block;
+}
+.d-grid img:hover { opacity: .8; }
+
+/* ===== 照片查看器 ===== */
+#lightbox {
+  position: fixed; inset: 0; z-index: 50; background: rgba(12, 10, 8, .92);
+  display: none; align-items: center; justify-content: center;
+}
+#lightbox.open { display: flex; }
+#lb-img { max-width: 92vw; max-height: 88vh; border-radius: 4px; }
+.lb-btn {
+  position: absolute; border: 0; background: rgba(255,255,255,.15);
+  color: #fff; cursor: pointer; border-radius: 50%;
+}
+#lb-close { top: 18px; right: 20px; width: 40px; height: 40px; font-size: 24px; }
+.lb-nav { top: 50%; transform: translateY(-50%); width: 46px; height: 46px; font-size: 28px; }
+#lb-prev { left: 16px; }
+#lb-next { right: 16px; }
+.lb-btn:hover { background: rgba(255,255,255,.3); }
+#lb-counter {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  color: #fff; font-size: 13px; opacity: .8;
+}
+
+/* ===== 无 Key 提示 ===== */
+#no-key-tip {
+  position: fixed; inset: 0; z-index: 100; display: none;
+  align-items: center; justify-content: center;
+  background: rgba(253, 250, 244, .96); padding: 20px;
+}
+#no-key-tip > div {
+  max-width: 520px; background: #fff; border: 1px solid #e5dccb;
+  border-radius: 12px; padding: 28px; box-shadow: 0 8px 30px rgba(90,60,20,.15);
+}
+#no-key-tip h2 { color: #8c2f1b; margin-bottom: 12px; }
+#no-key-tip p { font-size: 14px; line-height: 2; color: #4a4033; }
+#no-key-tip code { background: #f5edd9; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+/* ===== 手机端 ===== */
+@media (max-width: 720px) {
+  #topbar { left: 10px; right: 10px; transform: none; }
+  #topbar h1 { font-size: 17px; flex: 1; }
+  #toggle-panel { display: block; }
+  #timeline {
+    top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 45%;
+    border-radius: 14px 14px 0 0; transform: translateY(105%); transition: transform .3s;
+  }
+  #timeline.open { transform: translateY(0); }
+  #drawer {
+    top: auto; bottom: 0; left: 0; right: 0; width: auto; height: 72%;
+    border-radius: 14px 14px 0 0;
+    transform: translateY(105%);
+  }
+  #drawer.open { transform: translateY(0); }
+  .spot-label { font-size: 11px; }
+}
